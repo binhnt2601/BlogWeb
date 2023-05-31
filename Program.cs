@@ -40,8 +40,15 @@ builder.Services.Configure<IdentityOptions>(options =>
     // Cấu hình đăng nhập.
     options.SignIn.RequireConfirmedEmail = true;            // Cấu hình xác thực địa chỉ email (email phải tồn tại)
     options.SignIn.RequireConfirmedPhoneNumber = false;     // Xác thực số điện thoại
-
+    options.SignIn.RequireConfirmedAccount = true;
 });
+
+builder.Services.ConfigureApplicationCookie(options =>{
+    options.LoginPath = "/login";
+    options.LogoutPath = "/logout/";
+    options.AccessDeniedPath = "/AccessDenied";
+});
+
 builder.Services.AddOptions ();                                        // Kích hoạt Options
 var mailsettings = builder.Configuration.GetSection ("MailSettings");  // đọc config
 builder.Services.Configure<MailSettings> (mailsettings);               // đăng ký để Inject
