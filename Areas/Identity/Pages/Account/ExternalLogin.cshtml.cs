@@ -86,7 +86,7 @@ namespace razor07.Areas.Identity.Pages.Account
             [EmailAddress]
             public string Email { get; set; }
         }
-        
+
         public IActionResult OnGet() => RedirectToPage("./Login");
 
         public IActionResult OnPost(string provider, string returnUrl = null)
@@ -97,6 +97,7 @@ namespace razor07.Areas.Identity.Pages.Account
             return new ChallengeResult(provider, properties);
         }
 
+        //https://localhost:7258/Identity/Account/ExternalLogin?returnUrl=%2F&handler=Callback
         public async Task<IActionResult> OnGetCallbackAsync(string returnUrl = null, string remoteError = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
@@ -116,6 +117,7 @@ namespace razor07.Areas.Identity.Pages.Account
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
             if (result.Succeeded)
             {
+                //Account: LoginProvider
                 _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
                 return LocalRedirect(returnUrl);
             }
@@ -125,6 +127,8 @@ namespace razor07.Areas.Identity.Pages.Account
             }
             else
             {
+                //Co tai khoan, chua lien ket => Lien ket tai khoan vs dich vu ngoai
+                //Chua co tai khoan => Tao tai khoan, lien ket vs dich vu ngoai => Dang nhap
                 // If the user does not have an account, then ask the user to create an account.
                 ReturnUrl = returnUrl;
                 ProviderDisplayName = info.ProviderDisplayName;
@@ -152,6 +156,71 @@ namespace razor07.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
+                //Input Email
+                var registedUser = await _userManager.FindByEmailAsync(Input.Email);
+                string externalEmail = null;
+                AppUser externalEmailUser = null;
+                //Claim ~ Dac tinh mo ta 1 doi tuong
+                if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
+                {
+                    externalEmail = info.Principal.FindFirstValue(ClaimTypes.Email);
+                };
+                if (externalEmail != null)
+                {
+                    //Tim trong DB xem co nguoi dung co email trung vs email dang nhap bang ExtLogin hay k
+                    externalEmailUser = await _userManager.FindByEmailAsync(externalEmail);
+                }
+                if (externalEmailUser != null && externalEmail != null)
+                {
+                    if (registedUser.Id == externalEmailUser.Id)
+                    // if(externalEmail == Input.Email)
+                    {
+                        //Lien ket TK, dang nhap
+                        var resultLink = await _userManager.AddLoginAsync(registedUser, info);
+                        if (resultLink.Succeeded)
+                        {
+                            await _signInManager.SignInAsync(registedUser, false);
+                            return LocalRedirect(returnUrl);
+                        }
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Cant link your account! Pls use another emmail");
+                        return Page();
+                    }
+                    return Content("Ok");
+                }
+
+
+                if (externalEmailUser != null && registedUser == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Email not match with external Login Email");
+                    return Page();
+                }
+                if(externalEmailUser == null && externalEmail == Input.Email)
+                {
+                    //Chua co User, tao User moi
+                    var newUser = new AppUser(){
+                        UserName = externalEmail,
+                        Email = externalEmail
+                    };
+
+                    var resultUser = await _userManager.CreateAsync(newUser);
+                    if(resultUser.Succeeded)
+                    {
+                        await _userManager.AddLoginAsync(newUser, info);
+                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
+                        await _userManager.ConfirmEmailAsync(newUser, code);
+                        await _signInManager.SignInAsync(newUser, false);
+                        return LocalRedirect(returnUrl);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Cant create Account");
+                        return Page();
+                    }
+                }
+
                 var user = CreateUser();
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
