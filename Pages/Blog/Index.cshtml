@@ -1,0 +1,62 @@
+@page
+@using razor07.Helpers
+@model razor07.Pages_Blog.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+    var pagingmodel = new PagingModel()
+    {
+        currentpage = Model.currentPage,
+        countpages = Model.countPages,
+        generateUrl = (int? p) => @Url.Page("./Index", new{p = p})
+    };
+}
+
+
+
+<h1>Index</h1>
+<row>
+    <p>
+        <a class="btn btn-success" asp-page="Create">Create New</a>
+    </p>
+    <form style="margin-left: 70%;" method="get" asp-page="./Index">
+        <label>Search: </label>
+        <input type="text" name="searchString" value="" />
+        <button type="submit">Search</button>
+    </form>
+</row>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Index</th>
+            <th>
+                @Html.DisplayNameFor(model => model.Article[0].Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Article[0].CreatedAt)
+            </th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Article)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Id)</td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedAt)
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit </a>|
+                    <a asp-page="./Details" asp-route-id="@item.Id">Details </a>|
+                    <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<partial name="_Paging" model="@pagingmodel"/>
