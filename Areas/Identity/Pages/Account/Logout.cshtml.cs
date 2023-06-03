@@ -43,7 +43,7 @@ namespace razor07.Areas.Identity.Pages.Account
             {
                 // This needs to be a redirect so that the browser performs a new
                 // request and the identity for the user gets updated.
-                returnUrl = Url.Content("~");
+                returnUrl = Url.Content("~/");
                 return LocalRedirect(returnUrl);
             }
         }

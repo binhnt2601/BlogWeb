@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using razor07.Binder;
 using razor07.Models;
 
 namespace razor07.Areas.Identity.Pages.Account.Manage
@@ -59,6 +60,17 @@ namespace razor07.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            [MaxLength(100)]
+            public string FullName { set; get; }
+
+            [MaxLength(255)]
+            public string Address { set; get; }
+
+            [DataType(DataType.Date)]
+            [ModelBinder(BinderType = typeof(DayMonthYearBinder))]
+            [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
+            public DateTime? Birthday { set; get; }
         }
 
         private async Task LoadAsync(AppUser user)
@@ -70,7 +82,10 @@ namespace razor07.Areas.Identity.Pages.Account.Manage
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                Birthday = user.Birthday,
+                Address = user.Address,
+                FullName = user.FullName
             };
         }
 
@@ -111,6 +126,13 @@ namespace razor07.Areas.Identity.Pages.Account.Manage
                 }
             }
 
+            //Update additional infos
+            user.Address = Input.Address;
+            user.Birthday = Input.Birthday;
+            user.FullName = Input.FullName;
+            await _userManager.UpdateAsync(user);
+
+            // Đăng nhập lại để làm mới Cookie (không nhớ thông tin cũ)
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
             return RedirectToPage();
