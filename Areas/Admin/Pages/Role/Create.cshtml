@@ -1,0 +1,25 @@
+﻿@page
+@model razor07.Admin.Role.CreateModel
+@{
+    ViewData["Title"] = "Create Role";
+}
+<h2>@ViewData["Title"]</h2>
+<partial name="_StatusMessage" model="@Model.StatusMessage"></partial>
+
+<hr>
+
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Input.RoleName" class="control-label"></label>
+                <input asp-for="Input.RoleName" class="form-control" />
+                <span asp-validation-for="Input.RoleName" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-2">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
