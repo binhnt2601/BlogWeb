@@ -1,0 +1,31 @@
+﻿@page 
+@model razor07.Admin.Role.IndexModel
+@{
+    ViewData["Title"] = "Role List";
+}
+<h2>@ViewData["Title"]</h2>
+<partial name="_StatusMessage" model="@Model.StatusMessage"></partial>
+<div class="mb-2">
+    <a class="btn btn-success" asp-page="./Create">Create New Role</a>
+    <a class="btn btn-success" asp-page="../User/Index">User's Role Manage</a>
+</div>
+
+<table class="table">
+    <tr>
+        <th>Roles</th>
+        <th>Actions</th>
+    </tr>
+    @foreach (var role in Model.roles)
+    {
+        <tr>
+            <td>@role.Name</td>
+            <td>
+                <a class="btn btn-info btn-sm" asp-page="./Edit" asp-route-roleId="@role.Id">Edit</a>
+                <form class="form" method="post" asp-page-handler="Delete" asp-route-id="@role.Id">
+                    <button class="btn btn-danger" type="submit">Delete</button>
+                </form>
+                
+            </td>
+        </tr>
+    }
+</table>

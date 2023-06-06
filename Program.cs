@@ -46,7 +46,7 @@ builder.Services.Configure<IdentityOptions>(options =>
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/login";
-    // options.LogoutPath = "/logout/";
+    options.LogoutPath = "/logout";
     options.AccessDeniedPath = "/AccessDenied";
 });
 
