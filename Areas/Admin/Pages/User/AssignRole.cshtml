@@ -21,9 +21,36 @@
                 <span asp-validation-for="RoleNames" class="text-danger"></span>
             </div>
             <button type="submit" class="w-100 btn-sm btn-primary">Set</button>
-            
+            <a class="btn btn-success mt-2" asp-page="./Index">User's Role Manage</a>
         </form>
-        <a class="btn btn-success mt-2" asp-page="./Index">User's Role Manage</a>
+        <hr>
+        <p>
+            <strong>Role Claims:</strong>
+        </p>
+        @if (Model.roleClaims.Count >0)
+        {
+            <ul>
+                @foreach (var claim in Model.roleClaims)
+                {
+                    <li>@claim.ClaimType: @claim.ClaimValue</li>
+                }
+            </ul>
+        }
+        <p>
+            <strong>User Claims:</strong>
+            <a class="text-dark" asp-page="./UserClaim" asp-page-handler="Create" asp-route-userId="@Model.user.Id">+ Add User Claim</a>
+        </p>
+        @if (Model.roleClaims.Count >0)
+        {
+            <ul>
+                @foreach (var claim in Model.userClaims)
+                {
+                    <li>
+                        <a asp-page="./UserClaim" asp-page-handler="Edit" asp-route-claimId="@claim.Id">@claim.ClaimType: @claim.ClaimValue</a>              
+                    </li>
+                }
+            </ul>
+        }
     </div>
 </div>
 

@@ -77,7 +77,26 @@ builder.Services.AddAuthentication()
                     // Thiết lập đường dẫn Facebook chuyển hướng đến
                     facebookOptions.CallbackPath = "/login-from-facebook";
                 });
-
+builder.Services.AddAuthorization(options => {
+    options.AddPolicy("AlowEditorRole", policyBuilder => {
+        policyBuilder.RequireAuthenticatedUser();
+        // policyBuilder.RequireRole("Admin");
+        // policyBuilder.RequireRole("Editor");
+        policyBuilder.RequireClaim("ManageRole", "Delete");
+    });
+    options.AddPolicy("TrinhDoDaiHoc", policyBuilder => {
+        policyBuilder.RequireAuthenticatedUser();
+        // policyBuilder.RequireRole("Admin");
+        // policyBuilder.RequireRole("Editor");
+        policyBuilder.RequireClaim("HocVan", "DaiHoc");
+    });
+});
+builder.Services.Configure<SecurityStampValidatorOptions>(options =>
+{
+    // Trên 30 giây truy cập lại sẽ nạp lại thông tin User (Role)
+    // SecurityStamp trong bảng User đổi -> nạp lại thông tinn Security
+    options.ValidationInterval = TimeSpan.FromSeconds(20);
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

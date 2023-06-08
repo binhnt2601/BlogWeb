@@ -1,4 +1,4 @@
-﻿@page "/Admin/Role/Edit"
+﻿@page "/Admin/Role/Edit/{roleId}"
 @model razor07.Admin.Role.EditModel
 @{
     ViewData["Title"] = "Edit Role";
@@ -21,5 +21,23 @@
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
+        <hr>
+        <p>Role's Claims: 
+            <a asp-page="./AddClaims" asp-route-roleId="@Model.role.Id">+ Add Claim</a>
+        </p>
+        @if (Model.Claims.Count >0)
+        {
+            <ul>
+                @foreach (var claim in Model.Claims)
+                {
+                    <li>
+                        <strong>@claim.ClaimType</strong>: @claim.ClaimValue
+                        <a asp-page="./EditClaim" asp-route-claimId="@claim.Id">Edit</a>
+            
+                    </li>
+                    
+                }
+            </ul>
+        }
     </div>
 </div>

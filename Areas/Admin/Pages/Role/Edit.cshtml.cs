@@ -3,11 +3,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using razor07.Models;
 
 namespace razor07.Admin.Role
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = "TrinhDoDaiHoc")]
     public class EditModel : RolePageModel
     {
         public EditModel(RoleManager<IdentityRole> roleManager, MyBlogContext context) : base(roleManager, context)
@@ -23,18 +24,22 @@ namespace razor07.Admin.Role
         [BindProperty]
         public InputModel Input { get; set; }
 
+        public List<IdentityRoleClaim<string>> Claims { get; set; }
+        public IdentityRole role {get; set; }
+
         public async Task<IActionResult> OnGetAsync(string roleId)
         {
             if(roleId == null)
             {
                 return NotFound("There is no Role with this ID");
             }
-            var role = await _roleManager.FindByIdAsync(roleId);
+            role = await _roleManager.FindByIdAsync(roleId);
             if(role != null)
             {
                Input = new InputModel(){
                 RoleName = role.Name
                };
+               Claims = await _context.RoleClaims.Where(rc => rc.RoleId == roleId).ToListAsync();
                return Page();
             }
             return NotFound("There is no Role with this ID");
@@ -51,6 +56,7 @@ namespace razor07.Admin.Role
             {
                 return NotFound("There is no Role with this ID");
             }
+            Claims = await _context.RoleClaims.Where(rc => rc.RoleId == roleId).ToListAsync();
             if(!ModelState.IsValid)
             {
                 return Page();
