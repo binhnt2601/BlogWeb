@@ -15,21 +15,23 @@ using razor07.Models;
 
 namespace razor07.Admin.User
 {
-    [Authorize(Roles = "Admin")]
     public class AssignRoleModel : PageModel
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly MyBlogContext _context;
 
         public AssignRoleModel(
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            MyBlogContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _context = context;
         }
 
         /// <summary>
@@ -55,6 +57,9 @@ namespace razor07.Admin.User
         public AppUser user {get; set;}
         public SelectList allRoles {get; set;}
 
+        public List<IdentityRoleClaim<string>> roleClaims {get; set; }
+        public List<IdentityUserClaim<string>> userClaims {get; set; }
+
         public async Task<IActionResult> OnGetAsync(string id)
         {
             if(string.IsNullOrEmpty(id))
@@ -69,8 +74,26 @@ namespace razor07.Admin.User
             RoleNames = (await _userManager.GetRolesAsync(user)).ToArray<string>();
             List<string> roleNames = await _roleManager.Roles.Select(r => r.Name).ToListAsync();
             allRoles = new SelectList(roleNames);
-
+            await GetUserRoleClaim(id);
+            
             return Page();
+        }
+
+        async Task GetUserRoleClaim(string id)
+        {
+            var listRole = from r in _context.Roles
+                           join ur in _context.UserRoles on r.Id equals ur.RoleId
+                           where ur.UserId == id
+                           select r;
+
+            var listRoleClaim = from c in _context.RoleClaims
+                             join r in listRole on c.RoleId equals r.Id
+                             select c;
+            roleClaims =  await listRoleClaim.ToListAsync();
+
+            userClaims = await (from c in _context.UserClaims
+                                where c.UserId == id
+                                select c).ToListAsync();
         }
 
         public async Task<IActionResult> OnPostAsync(string id)
@@ -86,6 +109,7 @@ namespace razor07.Admin.User
                 return NotFound($"Unable to load user with ID '{id}'.");
             }
             //Roles
+            await GetUserRoleClaim(id);
             var oldRoles = (await _userManager.GetRolesAsync(user)).ToArray();
             var deleteRoles = oldRoles.Where(r => !RoleNames.Contains(r));
             var addRoles = RoleNames.Where(r => !oldRoles.Contains(r));

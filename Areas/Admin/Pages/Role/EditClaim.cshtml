@@ -1,0 +1,32 @@
+﻿@page "/Admin/Role/EditClaim/{claimId}"
+@model razor07.Admin.Role.EditClaimModel
+@{
+    ViewData["Title"] = "Edit Claims";
+}
+<h2>@ViewData["Title"] To: @Model.role.Name"</h2>
+<partial name="_StatusMessage" model="@Model.StatusMessage"></partial>
+
+<hr>
+
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Input.ClaimType" class="control-label"></label>
+                <input asp-for="Input.ClaimType" class="form-control" />
+                <span asp-validation-for="Input.ClaimType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.ClaimValue" class="control-label"></label>
+                <input asp-for="Input.ClaimValue" class="form-control" />
+                <span asp-validation-for="Input.ClaimValue" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-2">
+                <input type="submit" value="Update" class="btn btn-primary" />
+                <a class="btn btn-primary" asp-page="./Edit" asp-route-roleId="@Model.role.Id">Edit Role</a>
+                <input type="submit" value="Delete" asp-page-handler="Delete" class="btn btn-danger">
+            </div>
+        </form>
+    </div>
+</div>

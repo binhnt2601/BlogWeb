@@ -7,7 +7,6 @@ using razor07.Models;
 
 namespace razor07.Admin.Role
 {
-    [Authorize(Roles = "Admin")]
     public class CreateModel : RolePageModel
     {
         public CreateModel(RoleManager<IdentityRole> roleManager, MyBlogContext context) : base(roleManager, context)

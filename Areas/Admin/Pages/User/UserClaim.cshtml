@@ -1,0 +1,36 @@
+﻿@page "/Admin/User/UserClaim/{userId?}"
+@model razor07.Admin.User.UserClaimModel
+@{
+    ViewData["Title"] = "User Claim";
+}
+
+<h2>@ViewData["Title"]</h2>
+<partial name="_StatusMessage" for="StatusMessage" />
+
+<hr>
+
+<div class="row">
+    <div class="col-md-6">
+        <form method="post" >
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Input.ClaimType" class="control-label"></label>
+                <input asp-for="Input.ClaimType" class="form-control" />
+                <span asp-validation-for="Input.ClaimType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.ClaimValue" class="control-label"></label>
+                <input asp-for="Input.ClaimValue" class="form-control" />
+                <span asp-validation-for="Input.ClaimValue" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                @if (@Model.userClaim != null)
+                {
+                    <input type="submit" asp-page="./UserClaim" asp-page-handler="Delete" asp-route-claimId="@Model.userClaim.Id" value="Delete" class="btn btn-danger" />
+                }              
+                <a class="btn btn-primary" asp-page="./AssignRole" asp-route-id="@Model.user.Id">Edit User</a>
+            </div>
+        </form>
+    </div>
+</div>
