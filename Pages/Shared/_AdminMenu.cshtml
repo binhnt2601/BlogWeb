@@ -1,0 +1,17 @@
+@using Microsoft.AspNetCore.Authorization
+
+@inject IAuthorizationService authorizationService
+
+@{
+    var authorizeResult = await authorizationService.AuthorizeAsync(this.User, "ShowAdminMenu");
+}
+
+@if (authorizeResult.Succeeded)
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-page="/Role/Index" asp-area="Admin">Roles Manage</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-page="/User/Index" asp-area="Admin">Users Manage</a>
+    </li>
+}

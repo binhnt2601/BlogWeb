@@ -1,7 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using razor07.Models;
+using razor07.Security.Requirement;
+using razor07.Security.RequirementHandler;
 using razor07.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -54,6 +58,9 @@ builder.Services.AddOptions();                                        // Kích h
 var mailsettings = builder.Configuration.GetSection("MailSettings");  // đọc config
 builder.Services.Configure<MailSettings>(mailsettings);               // đăng ký để Inject
 builder.Services.AddSingleton<IEmailSender, SendMailService>();
+// builder.Services.AddTransient<IAuthorizationRequirement, AgeRequirement>();
+builder.Services.AddTransient<IAuthorizationHandler, RequirementHandler>();
+// builder.Services.AddTransient<ILogger, Logger<RequirementHandler>>();
 
 //AuthenticationService
 builder.Services.AddAuthentication()
@@ -89,6 +96,24 @@ builder.Services.AddAuthorization(options => {
         // policyBuilder.RequireRole("Admin");
         // policyBuilder.RequireRole("Editor");
         policyBuilder.RequireClaim("HocVan", "DaiHoc");
+    });
+    options.AddPolicy("18YearsOld", policyBuilder => {
+        policyBuilder.RequireAuthenticatedUser();
+        policyBuilder.Requirements.Add(new AgeRequirement());
+
+        // IAuthorizationRequirement dc xu ly bang AuthorizationHandler
+    });
+    options.AddPolicy("UpdateBlog", policyBuilder => {
+        policyBuilder.RequireAuthenticatedUser();
+        policyBuilder.Requirements.Add(new BlogUpdateRequirement());
+
+        // IAuthorizationRequirement dc xu ly bang AuthorizationHandler
+    });
+    options.AddPolicy("ShowAdminMenu", policyBuilder => {
+        policyBuilder.RequireAuthenticatedUser();
+        policyBuilder.RequireRole("Admin");
+
+        // IAuthorizationRequirement dc xu ly bang AuthorizationHandler
     });
 });
 builder.Services.Configure<SecurityStampValidatorOptions>(options =>

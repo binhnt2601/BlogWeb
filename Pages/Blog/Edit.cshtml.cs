@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -10,13 +11,16 @@ using razor07.Models;
 
 namespace razor07.Pages_Blog
 {
+    [Authorize(Policy = "UpdateBlog")]
     public class EditModel : PageModel
     {
-        private readonly razor07.Models.MyBlogContext _context;
+        private readonly MyBlogContext _context;
+        private readonly IAuthorizationService _authorizationService;
 
-        public EditModel(razor07.Models.MyBlogContext context)
+        public EditModel(MyBlogContext context, IAuthorizationService authorizationService)
         {
             _context = context;
+            _authorizationService = authorizationService;
         }
 
         [BindProperty]
@@ -51,7 +55,16 @@ namespace razor07.Pages_Blog
 
             try
             {
-                await _context.SaveChangesAsync();
+                //Kt quyen cap nhat
+                var result = await _authorizationService.AuthorizeAsync(this.User, Article ,"UpdateBlog");
+                if(result.Succeeded)
+                {
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    return Content("User have no permission to do this action");
+                }
             }
             catch (DbUpdateConcurrencyException)
             {
