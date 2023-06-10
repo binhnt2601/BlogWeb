@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "razor07": {
+    "App": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

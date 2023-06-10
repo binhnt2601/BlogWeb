@@ -11,22 +11,22 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using razor07.Models;
+using App.Models;
 
-namespace razor07.Admin.User
+namespace App.Admin.User
 {
     public class AssignRoleModel : PageModel
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly MyBlogContext _context;
+        private readonly AppDbContext _context;
 
         public AssignRoleModel(
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
             RoleManager<IdentityRole> roleManager,
-            MyBlogContext context)
+            AppDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;

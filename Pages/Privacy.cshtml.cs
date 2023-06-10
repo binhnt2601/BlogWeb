@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace razor07.Pages;
+namespace App.Pages;
 
 public class PrivacyModel : PageModel
 {

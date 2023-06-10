@@ -3,23 +3,23 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using razor07.Models;
-using razor07.Security.Requirement;
-using razor07.Security.RequirementHandler;
-using razor07.Services;
+using App.Models;
+using App.Security.Requirement;
+using App.Security.RequirementHandler;
+using App.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddDbContext<MyBlogContext>(options =>
+builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("defaultConnection"));
 });
 
 // builder.Services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<MyBlogContext>();
 builder.Services.AddIdentity<AppUser, IdentityRole>()
-        .AddEntityFrameworkStores<MyBlogContext>()
+        .AddEntityFrameworkStores<AppDbContext>()
         .AddDefaultTokenProviders();
 builder.Services.Configure<IdentityOptions>(options =>
 {

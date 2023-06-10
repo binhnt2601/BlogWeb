@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace razor07.Binder
+namespace App.Binder
 {
     public class DayMonthYearBinder : IModelBinder {
     public Task BindModelAsync (ModelBindingContext bindingContext) {

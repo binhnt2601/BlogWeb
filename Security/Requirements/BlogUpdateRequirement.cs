@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 
-namespace razor07.Security.Requirement
+namespace App.Security.Requirement
 {
     public class BlogUpdateRequirement : IAuthorizationRequirement
     {

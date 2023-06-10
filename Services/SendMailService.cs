@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Options;
 using MimeKit;
 
-namespace razor07.Services
+namespace App.Services
 {
     public class MailSettings {
         public string Mail { get; set; }

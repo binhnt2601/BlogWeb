@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
-namespace razor07.Models
+namespace App.Models
 {
     public class AppUser:IdentityUser
     {

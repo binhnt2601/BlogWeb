@@ -1,10 +1,10 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using razor07.Models;
-using razor07.Security.Requirement;
+using App.Models;
+using App.Security.Requirement;
 
-namespace razor07.Security.RequirementHandler
+namespace App.Security.RequirementHandler
 {
     public class RequirementHandler : IAuthorizationHandler
     {

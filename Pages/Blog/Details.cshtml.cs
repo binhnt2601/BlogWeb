@@ -6,17 +6,17 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using razor07.Models;
+using App.Models;
 
 
-namespace razor07.Pages_Blog
+namespace App.Pages_Blog
 {
     [Authorize(Policy = "18YearsOld")]
     public class DetailsModel : PageModel
     {
-        private readonly razor07.Models.MyBlogContext _context;
+        private readonly App.Models.AppDbContext _context;
 
-        public DetailsModel(razor07.Models.MyBlogContext context)
+        public DetailsModel(App.Models.AppDbContext context)
         {
             _context = context;
         }

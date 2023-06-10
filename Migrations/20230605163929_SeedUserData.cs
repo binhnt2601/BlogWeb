@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace razor07.Migrations
+namespace App.Migrations
 {
     /// <inheritdoc />
     public partial class SeedUserData : Migration

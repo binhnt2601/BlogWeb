@@ -1,4 +1,4 @@
-namespace razor07.Helpers
+namespace App.Helpers
 {
     public class PagingModel
     {

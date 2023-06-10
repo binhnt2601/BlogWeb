@@ -1,15 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using razor07.Models;
+using App.Models;
 
-namespace razor07.Pages;
+namespace App.Pages;
 
 public class IndexModel : PageModel
 {
     private readonly ILogger<IndexModel> _logger;
-    private readonly MyBlogContext _context;
+    private readonly AppDbContext _context;
 
-    public IndexModel(ILogger<IndexModel> logger, MyBlogContext context)
+    public IndexModel(ILogger<IndexModel> logger, AppDbContext context)
     {
         _logger = logger;
         _context = context;

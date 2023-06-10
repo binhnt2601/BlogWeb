@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using razor07.Models;
+using App.Models;
 
-namespace razor07.Admin.User
+namespace App.Admin.User
 {
     public class IndexModel : PageModel
     {

@@ -4,16 +4,16 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using razor07.Models;
+using App.Models;
 
-namespace razor07.Admin.User
+namespace App.Admin.User
 {
     public class UserClaimModel : PageModel
     {
         private readonly UserManager<AppUser> _userManager;
-        private readonly MyBlogContext _context;
+        private readonly AppDbContext _context;
 
-        public UserClaimModel(UserManager<AppUser> userManager, MyBlogContext context)
+        public UserClaimModel(UserManager<AppUser> userManager, AppDbContext context)
         {
             _userManager = userManager;
             _context = context;
